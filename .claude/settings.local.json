@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__lsmcp__list_dir",
+      "mcp__lsmcp__find_file",
+      "mcp__lsmcp__index_symbols",
+      "mcp__lsmcp__get_index_stats_from_index",
+      "mcp__lsmcp__search_for_pattern",
+      "mcp__lsmcp__search_symbol_from_index",
+      "mcp__lsmcp__write_memory",
+      "mcp__lsmcp__get_project_overview",
+      "mcp__lsmcp__get_document_symbols"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
