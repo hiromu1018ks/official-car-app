@@ -1,13 +1,15 @@
-import { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
+// StatsCardコンポーネントのprops型定義
 interface StatsCardProps {
-  title: string;
-  value: number;
-  unit: string;
-  icon: LucideIcon;
-  colorScheme: "blue" | "green" | "amber" | "red";
+  title: string; // カードのタイトル
+  value: number; // 表示する数値
+  unit: string; // 単位（例: km, 件 など）
+  icon: LucideIcon; // 表示するアイコンコンポーネント
+  colorScheme: "blue" | "green" | "amber" | "red"; // カラースキーム
 }
 
+// 統計情報を表示するカードコンポーネント
 export const StatsCard = ({
   title,
   value,
@@ -15,6 +17,7 @@ export const StatsCard = ({
   icon: Icon,
   colorScheme,
 }: StatsCardProps) => {
+  // カラースキームごとのクラス定義
   const colorClasses = {
     blue: {
       icon: "from-blue-500 to-blue-600",
@@ -35,8 +38,10 @@ export const StatsCard = ({
   };
 
   return (
+    // ガラス風エフェクトとホバー効果付きのカード
     <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20 card-hover">
       <div className="flex items-center">
+        {/* アイコン部分 */}
         <div className="flex-shrink-0">
           <div
             className={`w-12 h-12 bg-gradient-to-br ${colorClasses[colorScheme].icon} rounded-2xl flex items-center justify-center shadow-lg`}
@@ -44,6 +49,7 @@ export const StatsCard = ({
             <Icon className="text-white text-xl" />
           </div>
         </div>
+        {/* タイトルと値部分 */}
         <div className="ml-4">
           <p className="text-sm font-medium text-gray-600">{title}</p>
           <p className={`text-3xl font-bold ${colorClasses[colorScheme].text}`}>

@@ -1,5 +1,5 @@
 import { Car, CheckCircle, Wrench, XCircle } from "lucide-react";
-import { StatsCard } from "./components/StatsCard";
+import { StatsCard } from "./components/StatsCard.tsx";
 
 export default function Home() {
   const statsData = [
@@ -32,6 +32,7 @@ export default function Home() {
       colorScheme: "red" as const,
     },
   ];
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
