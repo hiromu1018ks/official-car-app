@@ -1,6 +1,7 @@
 "use client";
 
 import { vehicles } from "@/data/vehicles.ts";
+import { VehicleRow } from "./VehicleRow.tsx";
 
 export const VehicleTable = () => {
   return (
@@ -30,15 +31,8 @@ export const VehicleTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white/50 divide-y divide-gray-100">
-            {vehicles.map((vehice) => (
-              <tr
-                key={vehice.id}
-                className="hover:bg-white/80 transition-all duration-200"
-              >
-                <td colSpan={5} className="px-8 py-6 text-center text-gray-500">
-                  VehicleRowコンポーネントをここに配置予定
-                </td>
-              </tr>
+            {vehicles.map((vehicle) => (
+              <VehicleRow key={vehicle.id} vehicle={vehicle} />
             ))}
           </tbody>
         </table>
