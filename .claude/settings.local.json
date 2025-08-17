@@ -9,7 +9,9 @@
       "mcp__lsmcp__search_symbol_from_index",
       "mcp__lsmcp__write_memory",
       "mcp__lsmcp__get_project_overview",
-      "mcp__lsmcp__get_document_symbols"
+      "mcp__lsmcp__get_document_symbols",
+      "mcp__lsmcp__list_memories",
+      "mcp__lsmcp__read_memory"
     ],
     "deny": [],
     "ask": []
