@@ -49,7 +49,7 @@ export const StatsCard = ({
     },
     cyan: {
       icon: "from-blue-600 to-cyan-700",
-      text: "text-cyan-600",
+      text: "text-blue-600",
     },
     orange: {
       icon: "from-orange-600 to-red-700",
