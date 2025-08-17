@@ -9,7 +9,7 @@ export interface Vehicle {
   make: string; // メーカー名
   model: string; // モデル名
   year: number; // 年式
-  status: "available" | "in_use" | "maintenance"; // 現在の状態
+  status: "available" | "in-use" | "maintenance"; // 現在の状態
   currentUser?: string; // 現在使用中のユーザー（任意）
   nextInspection: string; // 次回点検日（ISO形式などの文字列）
   icon: LucideIcon; // 車両を表すアイコンコンポーネント
@@ -20,7 +20,7 @@ export interface Vehicle {
 /**
  * 車両の状態を表す型
  */
-export type VehicleStatus = "available" | "in_use" | "maintenance";
+export type VehicleStatus = "available" | "in-use" | "maintenance";
 
 /**
  * 各状態ごとの表示設定

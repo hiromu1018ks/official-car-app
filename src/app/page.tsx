@@ -1,5 +1,6 @@
 import { Car, CheckCircle, Wrench, XCircle } from "lucide-react";
 import { StatsCard } from "./components/StatsCard.tsx";
+import { VehicleTable } from "./components/VehicleTable.tsx";
 
 export default function Home() {
   const statsData = [
@@ -47,6 +48,8 @@ export default function Home() {
           />
         ))}
       </div>
+      {/* 車両一覧テーブル */}
+      <VehicleTable />
     </main>
   );
 }
