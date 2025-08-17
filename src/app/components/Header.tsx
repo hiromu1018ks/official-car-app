@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Car } from "lucide-react";
+import { Calendar, Car } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 
 export const Header = () => {
@@ -16,7 +16,7 @@ export const Header = () => {
           {/* ロゴ部分 */}
           <div className="flex items-center">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-white text-xl">
                   <Car />
                 </span>
@@ -58,10 +58,15 @@ export const Header = () => {
             </Link>
           </nav>
           <div className="flex items-center space-x-4">
-            <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+            <Button
+              className="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all 
+  shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
               <span className="flex items-center space-x-2">
-                <span>+</span>
-                <span>新規登録</span>
+                <span>
+                  <Calendar />
+                </span>
+                <span>予約する</span>
               </span>
             </Button>
             <div className="flex items-center space-x-3">

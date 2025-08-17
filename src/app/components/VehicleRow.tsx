@@ -57,7 +57,7 @@ export const VehicleRow = ({ vehicle }: VehicleRowProps) => {
           className={`px-4 py-2 rounded-xl transition-all shadow-md ${
             status.buttonDisabled
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-              : "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white hover:shadow-lg transform hover:scale-105"
+              : "bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white hover:shadow-lg transform hover:scale-105"
           }`}
           disabled={status.buttonDisabled}
         >

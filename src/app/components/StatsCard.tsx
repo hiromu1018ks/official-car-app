@@ -6,7 +6,15 @@ interface StatsCardProps {
   value: number; // 表示する数値
   unit: string; // 単位（例: km, 件 など）
   icon: LucideIcon; // 表示するアイコンコンポーネント
-  colorScheme: "blue" | "green" | "amber" | "red"; // カラースキーム
+  colorScheme:
+    | "blue"
+    | "green"
+    | "amber"
+    | "red"
+    | "purple"
+    | "cyan"
+    | "orange"
+    | "pink"; // カラースキーム
 }
 
 // 統計情報を表示するカードコンポーネント
@@ -34,6 +42,22 @@ export const StatsCard = ({
     red: {
       icon: "from-red-500 to-pink-600",
       text: "text-red-600",
+    },
+    purple: {
+      icon: "from-purple-600 to-indigo-700",
+      text: "gradient-text-purple", // 新しいCSSクラスか既存のgradient-textを使用
+    },
+    cyan: {
+      icon: "from-blue-600 to-cyan-700",
+      text: "text-cyan-600",
+    },
+    orange: {
+      icon: "from-orange-600 to-red-700",
+      text: "text-orange-600",
+    },
+    pink: {
+      icon: "from-pink-600 to-rose-700",
+      text: "text-pink-600",
     },
   };
 

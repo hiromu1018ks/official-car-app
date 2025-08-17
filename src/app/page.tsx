@@ -9,28 +9,28 @@ export default function Home() {
       value: 12,
       unit: "台",
       icon: Car,
-      colorScheme: "blue" as const,
+      colorScheme: "purple" as const,
     },
     {
       title: "利用可能",
       value: 8,
       unit: "台",
       icon: CheckCircle,
-      colorScheme: "green" as const,
+      colorScheme: "cyan" as const,
     },
     {
       title: "点検中",
       value: 2,
       unit: "台",
       icon: Wrench,
-      colorScheme: "amber" as const,
+      colorScheme: "orange" as const,
     },
     {
       title: "使用中",
       value: 2,
       unit: "台",
       icon: XCircle,
-      colorScheme: "red" as const,
+      colorScheme: "pink" as const,
     },
   ];
 
