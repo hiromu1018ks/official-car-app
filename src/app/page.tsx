@@ -1,3 +1,5 @@
+"use client";
+
 import { Car, CheckCircle, Wrench, XCircle } from "lucide-react";
 import { DrivingLogSection } from "./components/DrivingLogSection.tsx";
 import { StatsCard } from "./components/StatsCard.tsx";

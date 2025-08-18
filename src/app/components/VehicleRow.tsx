@@ -16,7 +16,7 @@ export const VehicleRow = ({ vehicle }: VehicleRowProps) => {
         <div className="flex items-center">
           <div className="flex-shrink-0 h-12 w-12">
             <div
-              className={`h-12 w-12 rounded-2xl bg-gradient-to-br from-${vehicle.iconColorFrom} to-${vehicle.iconColorTo} flex items-center justify-center shadow-lg`}
+              className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${vehicle.iconColorFrom} ${vehicle.iconColorTo} flex items-center justify-center shadow-lg`}
             >
               <IconComponent className="text-white w-6 h-6" />
             </div>
