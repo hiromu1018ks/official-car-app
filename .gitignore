@@ -42,3 +42,5 @@ next-env.d.ts
 
 # lsmcp cache
 .lsmcp/cache
+
+/src/generated/prisma

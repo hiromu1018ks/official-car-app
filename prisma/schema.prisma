@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// Prisma クライアントの生成設定
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+// データベース接続設定（PostgreSQL使用）
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ユーザーモデル
+model User {
+  id            String       @id @default(cuid()) // ユーザーID（主キー）
+  name          String       // ユーザー名
+  email         String       @unique // メールアドレス（ユニーク）
+  password      String       // パスワード
+  role          String       // 権限・役割
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  driving_logs  DrivingLog[] // ユーザーが記録した運転日誌（1対多リレーション）
+}
+
+// 車両モデル
+model Vehicle {
+  id                String        @id @default(cuid()) // 車両ID（主キー）
+  license_plate     String        @unique // ナンバープレート（ユニーク）
+  make              String        // メーカー
+  model             String        // モデル
+  year              Int           // 年式
+  status            VehicleStatus // 車両の状態
+  next_inspection   DateTime      // 次回点検日
+  icon              String        // アイコン名やパス
+  icon_color_from   String        // アイコングラデーション開始色
+  icon_color_to     String        // アイコングラデーション終了色
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  driving_logs      DrivingLog[]  // この車両の運転日誌（1対多リレーション）
+
+  @@map("vehicles") // テーブル名をスネークケースにマッピング
+}
+
+// 車両の状態を表す列挙型
+enum VehicleStatus {
+  AVAILABLE   // 利用可能
+  IN_USE      // 使用中
+  MAINTENANCE // 点検中
+}
+
+// 運転日誌モデル
+model DrivingLog {
+  id            String    @id @default(cuid()) // 運転日誌ID（主キー）
+  start_time    DateTime  // 運転開始時刻
+  end_time      DateTime? //運転終了時刻（任意）
+  start_meter   Int?      // 開始時メーター（任意）
+  end_meter     Int?      // 終了時メーター（任意）
+  destination   String?    // 行き先
+  is_refueling  Boolean   @default(false) // 給油有無
+  notes         String?   // 備考（任意）
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  vehicle       Vehicle   @relation(fields: [vehicle_id], references: [id]) // 車両リレーション
+  vehicle_id    String    // 車両ID（外部キー）
+
+  user_id       String   // ユーザーID（外部キー）
+  user          User     @relation(fields: [user_id], references: [id]) // ユーザーリレーション
+
+  @@map("driving_logs") // テーブル名をスネークケースにマッピング
+}
