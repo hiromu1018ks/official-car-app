@@ -1,4 +1,5 @@
-import { dbToFrontendVehicle, type Vehicle } from "@/types/vehicle.ts";
+import type { InUseVehicle, Vehicle } from "@/types/vehicle.ts";
+import { dbToFrontendVehicle, getIconComponent } from "@/types/vehicle.ts";
 import prisma from "./prisma.ts";
 
 /**
@@ -67,14 +68,48 @@ export async function getVehicleStats(): Promise<{
 
 /**
  * 使用中の車両一覧を取得する
- * @returns statusが"in-use"のVehicle型配列
+ * @returns InUseVehicle型配列（キャメルケース・利用者情報付き）
  */
-export async function getInUseVehicles() {
+export async function getInUseVehicles(): Promise<InUseVehicle[]> {
   try {
-    // 全車両データを取得し、statusでフィルタ
-    const vehicles = await getVehicles();
+    // PrismaでstatusがIN_USEの車両を取得し、現在使用中の運転記録・ユーザーも含めて取得
+    const inUserVehicles = await prisma.vehicle.findMany({
+      where: { status: "IN_USE" },
+      include: {
+        driving_logs: {
+          where: {
+            end_time: null, // 現在使用中の運転記録のみ
+          },
+          include: {
+            user: true, // 運転者情報も取得
+          },
+        },
+      },
+    });
 
-    return vehicles.filter((vehicle) => vehicle.status === "in-use");
+    // DBのsnake_caseデータをInUseVehicle型（camelCase）に変換
+    const result = inUserVehicles.map((vehicle) => {
+      // 現在の運転記録（1件のみ想定）
+      const currentLog = vehicle.driving_logs[0];
+
+      return {
+        id: vehicle.id, // 車両ID
+        licensePlate: vehicle.license_plate, // ナンバープレート（キャメルケースに変換）
+        make: vehicle.make, // メーカー
+        model: vehicle.model, // モデル
+        currentUser: currentLog?.user.name || "不明", // 現在の利用者名（なければ"不明"）
+        startTime:
+          currentLog?.start_time.toLocaleTimeString("ja-JP", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }) || "不明", // 利用開始時刻（なければ"不明"）
+        icon: getIconComponent(vehicle.icon), // アイコンコンポーネント
+        iconColorFrom: vehicle.icon_color_from, // アイコン色グラデーション開始
+        iconColorTo: vehicle.icon_color_to, // アイコン色グラデーション終了
+      };
+    });
+
+    return result;
   } catch (error) {
     // エラー発生時はログ出力し、上位にエラーを投げる
     console.error("Error fetching in-use vehicles:", error);
@@ -89,7 +124,9 @@ export async function getInUseVehicles() {
 export async function getDrivingLogStats() {
   try {
     // 使用中車両数を取得
-    const inUseVehicles = (await getInUseVehicles()).length;
+    const inUseVehicles = await prisma.vehicle.count({
+      where: { status: "IN_USE" },
+    });
 
     // 本日の日付範囲を計算
     const today = new Date();

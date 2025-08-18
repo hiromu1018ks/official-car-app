@@ -1,36 +1,36 @@
-"use client";
-
 import { Car, CheckCircle, Wrench, XCircle } from "lucide-react";
+import { getVehicleStats } from "@/lib/data.ts";
 import { DrivingLogSection } from "./components/DrivingLogSection.tsx";
 import { StatsCard } from "./components/StatsCard.tsx";
 import { VehicleTable } from "./components/VehicleTable.tsx";
 
-export default function Home() {
+export default async function Home() {
+  const { total, available, inUse, maintenance } = await getVehicleStats();
   const statsData = [
     {
       title: "総車両数",
-      value: 12,
+      value: total,
       unit: "台",
       icon: Car,
       colorScheme: "purple" as const,
     },
     {
       title: "利用可能",
-      value: 8,
+      value: available,
       unit: "台",
       icon: CheckCircle,
       colorScheme: "cyan" as const,
     },
     {
       title: "点検中",
-      value: 2,
+      value: maintenance,
       unit: "台",
       icon: Wrench,
       colorScheme: "orange" as const,
     },
     {
       title: "使用中",
-      value: 2,
+      value: inUse,
       unit: "台",
       icon: XCircle,
       colorScheme: "pink" as const,

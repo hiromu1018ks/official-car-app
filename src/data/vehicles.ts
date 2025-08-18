@@ -2,31 +2,8 @@ import { Car, CarFront, Truck } from "lucide-react";
 import type {
   DrivingLogStats,
   InUseVehicle,
-  StatusConfig,
   Vehicle,
 } from "../types/vehicle.ts";
-
-// ステータス設定（デザイン案のスタイル通り）
-export const statusConfig: Record<string, StatusConfig> = {
-  available: {
-    label: "利用可能",
-    bgGradient: "from-blue-100 to-cyan-100", // Green → Blue-Cyan
-    textColor: "text-blue-700",
-    buttonDisabled: false,
-  },
-  "in-use": {
-    label: "使用中",
-    bgGradient: "from-pink-100 to-rose-100", // そのまま
-    textColor: "text-pink-700",
-    buttonDisabled: true,
-  },
-  maintenance: {
-    label: "点検中",
-    bgGradient: "from-orange-100 to-red-100", // Amber → Orange-Red
-    textColor: "text-orange-700",
-    buttonDisabled: true,
-  },
-};
 
 // サンプル車両データ（デザイン案の3台を再現）
 export const vehicles: Vehicle[] = [

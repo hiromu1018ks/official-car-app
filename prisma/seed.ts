@@ -66,7 +66,7 @@ const userData: Prisma.UserCreateInput[] = [
 const drivingLogData: Prisma.DrivingLogCreateInput[] = [
   {
     id: "1",
-    start_time: new Date("2025-08-18T09:30:00Z"),
+    start_time: new Date("2025-08-18T09:30:00"),
     end_time: null,
     start_meter: null,
     end_meter: null,
@@ -88,7 +88,7 @@ const drivingLogData: Prisma.DrivingLogCreateInput[] = [
   },
   {
     id: "2",
-    start_time: new Date("2025-08-18T14:15:00Z"),
+    start_time: new Date("2025-08-18T14:15:00"),
     end_time: null,
     start_meter: null,
     end_meter: null,
@@ -110,8 +110,8 @@ const drivingLogData: Prisma.DrivingLogCreateInput[] = [
   },
   {
     id: "3",
-    start_time: new Date("2025-08-17T10:00:00Z"),
-    end_time: new Date("2025-08-17T16:30:00Z"),
+    start_time: new Date("2025-08-17T10:00:00"),
+    end_time: new Date("2025-08-17T16:30:00"),
     start_meter: 13999,
     end_meter: 14120,
     destination: "東京都千代田区丸の内1-1-1",
@@ -132,8 +132,8 @@ const drivingLogData: Prisma.DrivingLogCreateInput[] = [
   },
   {
     id: "4",
-    start_time: new Date("2025-08-16T08:45:00Z"),
-    end_time: new Date("2025-08-16T12:00:00Z"),
+    start_time: new Date("2025-08-16T08:45:00"),
+    end_time: new Date("2025-08-16T12:00:00"),
     start_meter: 8520,
     end_meter: 8580,
     destination: "東京都渋谷区道玄坂2-1-1",
@@ -154,8 +154,8 @@ const drivingLogData: Prisma.DrivingLogCreateInput[] = [
   },
   {
     id: "5",
-    start_time: new Date("2025-08-15T13:20:00Z"),
-    end_time: new Date("2025-08-15T17:45:00Z"),
+    start_time: new Date("2025-08-15T13:20:00"),
+    end_time: new Date("2025-08-15T17:45:00"),
     start_meter: 25100,
     end_meter: 25240,
     destination: "神奈川県横浜市西区みなとみらい2-2-1",
@@ -198,7 +198,7 @@ export async function main() {
       where: {
         id: drivingLog.id,
       },
-      update: {},
+      update: drivingLog,
       create: drivingLog,
     });
   }

@@ -1,10 +1,11 @@
-"use client";
-
 import { FileText } from "lucide-react";
-import { drivingLogStats, inUseVehicles } from "@/data/vehicles.ts";
+import { getDrivingLogStats, getInUseVehicles } from "@/lib/data.ts";
 import { InUseVehicleCard } from "./InUseVehicleCard.tsx";
 
-export const DrivingLogSection = () => {
+export const DrivingLogSection = async () => {
+  const { inUseVehicles: inUse, todayLog } = await getDrivingLogStats();
+  const inUseVehicles = await getInUseVehicles();
+
   return (
     <section className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl shadow-xl p-8 mb-8">
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
@@ -26,15 +27,11 @@ export const DrivingLogSection = () => {
         {/* 右側: 統計表示（デスクトップのみ） */}
         <div className="hidden lg:flex lg:space-x-6">
           <div className="text-center">
-            <div className="text-3xl font-bold text-white">
-              {drivingLogStats.inUseVehicles}
-            </div>
+            <div className="text-3xl font-bold text-white">{inUse}</div>
             <div className="text-sm text-purple-100">使用中車両</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-white">
-              {drivingLogStats.todayLogs}
-            </div>
+            <div className="text-3xl font-bold text-white">{todayLog}</div>
             <div className="text-sm text-purple-100">今日の記録</div>
           </div>
         </div>

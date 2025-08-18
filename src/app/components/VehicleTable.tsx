@@ -1,16 +1,22 @@
-"use client";
-
-import { vehicles } from "@/data/vehicles.ts";
+import { getVehicles } from "@/lib/data.ts";
 import { VehicleRow } from "./VehicleRow.tsx";
 
-export const VehicleTable = () => {
+// 車両一覧テーブルコンポーネント（サーバーコンポーネント）
+export const VehicleTable = async () => {
+  // 車両データを取得
+  const vehicles = await getVehicles();
+
   return (
+    // テーブル全体のラッパー（デザイン用のクラスを適用）
     <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+      {/* ヘッダー部分 */}
       <div className="px-8 py-6 border-b border-gray-100">
         <h2 className="text-xl font-bold gradient-text">車両一覧</h2>
       </div>
+      {/* テーブル本体（横スクロール対応） */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-100">
+          {/* テーブルヘッダー */}
           <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
             <tr>
               <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -30,8 +36,10 @@ export const VehicleTable = () => {
               </th>
             </tr>
           </thead>
+          {/* テーブルボディ（車両ごとにVehicleRowを描画） */}
           <tbody className="bg-white/50 divide-y divide-gray-100">
             {vehicles.map((vehicle) => (
+              // 各車両の行コンポーネント
               <VehicleRow key={vehicle.id} vehicle={vehicle} />
             ))}
           </tbody>
