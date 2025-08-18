@@ -40,8 +40,8 @@ export const vehicles: Vehicle[] = [
     currentUser: undefined,
     nextInspection: "2024/03/15",
     icon: Car,
-    iconColorFrom: "purple-500",
-    iconColorTo: "indigo-600",
+    iconColorFrom: "from-purple-500",
+    iconColorTo: "to-indigo-600",
   },
   {
     id: "2",
@@ -53,8 +53,8 @@ export const vehicles: Vehicle[] = [
     currentUser: "佐藤花子",
     nextInspection: "2024/04/20",
     icon: Truck,
-    iconColorFrom: "blue-500",
-    iconColorTo: "cyan-600",
+    iconColorFrom: "from-blue-500",
+    iconColorTo: "to-cyan-600",
   },
   {
     id: "3",
@@ -66,8 +66,8 @@ export const vehicles: Vehicle[] = [
     currentUser: undefined,
     nextInspection: "2024/02/28",
     icon: CarFront,
-    iconColorFrom: "orange-500",
-    iconColorTo: "red-600",
+    iconColorFrom: "from-orange-500",
+    iconColorTo: "to-red-600",
   },
 ];
 
