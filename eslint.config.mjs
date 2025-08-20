@@ -172,6 +172,7 @@ export default defineConfig([
       "**/lib/utils.{js,ts}",
       "**/components/ui/**/*.{js,jsx,tsx}",
       "**/*.config.*",
+      "src/generated/",
     ],
   },
   {
