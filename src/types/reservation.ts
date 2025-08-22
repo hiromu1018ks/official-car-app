@@ -67,3 +67,10 @@ export function statusFrontendToDb(
 
   return statusMap[status];
 }
+
+// Server Actionsの戻り値型を正確に定義
+export interface ServerActionResult {
+  success?: boolean;
+  error?: string;
+  details?: Record<string, unknown>;
+}

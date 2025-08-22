@@ -5,7 +5,11 @@ import { usePathname } from "next/navigation";
 import { Calendar, Car } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 
-export const Header = () => {
+interface HeaderProps {
+  onReservationClick: () => void;
+}
+
+export const Header = ({ onReservationClick }: HeaderProps) => {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
 
@@ -59,6 +63,7 @@ export const Header = () => {
           </nav>
           <div className="flex items-center space-x-4">
             <Button
+              onClick={onReservationClick}
               className="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all 
   shadow-lg hover:shadow-xl transform hover:scale-105"
             >

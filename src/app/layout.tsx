@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Header } from "./components/Header.tsx";
 
 import "./globals.css";
 
@@ -15,10 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>
-        <Header />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

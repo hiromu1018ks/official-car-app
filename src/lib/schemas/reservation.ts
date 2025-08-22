@@ -10,13 +10,12 @@ export const reservationSchema = z
     startDateTime: z
       .string()
       .min(1, "利用開始日時を選択してください")
-      .transform((str) => new Date(str)) // 文字列→Date型に変換
       .refine(
-        (date) => !isNaN(date.getTime()),
+        (str) => !isNaN(new Date(str).getTime()),
         "正しい日時形式で入力してください"
       )
       .refine(
-        (date) => date > new Date(),
+        (str) => new Date(str) > new Date(),
         "開始日時は現在時刻より後に設定してください"
       ),
 
@@ -24,9 +23,8 @@ export const reservationSchema = z
     endDateTime: z
       .string()
       .min(1, "利用終了日時を選択してください")
-      .transform((str) => new Date(str)) // 文字列→Date型に変換
       .refine(
-        (date) => !isNaN(date.getTime()),
+        (str) => !isNaN(new Date(str).getTime()),
         "正しい日時形式で入力してください"
       ),
 
@@ -37,7 +35,7 @@ export const reservationSchema = z
       .optional(),
   })
   // 開始日時より終了日時が後であることを検証
-  .refine((data) => data.endDateTime > data.startDateTime, {
+  .refine((data) => new Date(data.endDateTime) > new Date(data.startDateTime), {
     message: "終了日時は開始日時より後に設定してください",
     path: ["endDateTime"], // エラーをendDateTimeフィールドに関連付け
   });
