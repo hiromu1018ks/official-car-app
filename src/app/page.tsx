@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Vehicle } from "@/types/vehicle.ts";
 import { HomeContent } from "./components/HomeContent.tsx";
+import { ReservationCalendar } from "./components/ReservationCalendar.tsx";
 import { VehicleTable } from "./components/VehicleTable.tsx";
 
 interface VehicleStats {
@@ -56,7 +57,8 @@ export default function Home() {
         vehicles={vehicles}
       />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <VehicleTable /> {/* ← ここに移動 */}
+        <VehicleTable />
+        <ReservationCalendar />
       </main>
     </>
   );
