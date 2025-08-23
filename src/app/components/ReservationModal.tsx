@@ -96,7 +96,7 @@ export function ReservationModal({
     isOpen && (
       <div
         id="modal"
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
       >
         {/* 予約フォーム */}
         <form
