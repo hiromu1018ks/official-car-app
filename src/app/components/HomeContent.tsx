@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { Car, CheckCircle, Wrench, XCircle } from "lucide-react";
-import type { ServerActionResult } from "@/types/reservation.ts";
 import type { Vehicle } from "@/types/vehicle";
-import { DrivingLogSection } from "./DrivingLogSection.tsx";
+// import { DrivingLogSection } from "./DrivingLogSection.tsx";
 import { Header } from "./Header.tsx";
 import { ReservationModal } from "./ReservationModal.tsx";
 import { StatsCard } from "./StatsCard.tsx";
@@ -15,10 +14,6 @@ interface HomeContentProps {
   inUse: number;
   maintenance: number;
   vehicles: Vehicle[];
-  onReservationSubmit: (
-    formData: FormData,
-    userId: string
-  ) => Promise<ServerActionResult>;
 }
 
 export function HomeContent({
@@ -27,7 +22,6 @@ export function HomeContent({
   inUse,
   maintenance,
   vehicles,
-  onReservationSubmit,
 }: HomeContentProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -66,7 +60,7 @@ export function HomeContent({
     <>
       <Header onReservationClick={() => setIsModalOpen(true)} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <DrivingLogSection />
+        {/* <DrivingLogSection /> */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {statsData.map((stat, index) => (
             <StatsCard
@@ -85,7 +79,6 @@ export function HomeContent({
         vehicles={vehicles}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={onReservationSubmit}
       />
     </>
   );

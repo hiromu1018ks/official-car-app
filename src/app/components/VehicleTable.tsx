@@ -1,10 +1,38 @@
-import { getVehicles } from "@/lib/data.ts";
+"use client";
+
+import { useEffect, useState } from "react";
+import type { Vehicle } from "@/types/vehicle.ts";
 import { VehicleRow } from "./VehicleRow.tsx";
 
-// 車両一覧テーブルコンポーネント（サーバーコンポーネント）
-export const VehicleTable = async () => {
-  // 車両データを取得
-  const vehicles = await getVehicles();
+/**
+ * 車両一覧テーブルコンポーネント
+ * - /api/vehicles から車両データを取得し、テーブル表示
+ * - 読み込み中はローディング表示
+ */
+export const VehicleTable = () => {
+  // 車両データの状態管理
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  // ローディング状態管理
+  const [loading, setLoading] = useState(true);
+
+  // 初回マウント時に車両データを取得
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        // APIから車両データを取得
+        const response = await fetch("/api/vehicles");
+        const data = (await response.json()) as Vehicle[];
+        setVehicles(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    // 非同期関数の呼び出し（警告回避のためvoidを付与）
+    void fetchVehicles();
+  }, []);
+
+  // ローディング中の表示
+  if (loading) return <div>読み込み中...</div>;
 
   return (
     // テーブル全体のラッパー（デザイン用のクラスを適用）

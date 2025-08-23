@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { reservationSchema } from "@/lib/schemas/reservation.ts";
-import type { ServerActionResult } from "@/types/reservation.ts";
 import type { Vehicle } from "@/types/vehicle.ts";
 
 // ReservationModalコンポーネントのprops型定義
@@ -16,7 +15,6 @@ interface ReservationModalProps {
   vehicles: Vehicle[]; // 選択可能な車両リスト
   isOpen: boolean; // モーダル表示状態
   onClose: () => void; // モーダルを閉じる関数
-  onSubmit: (formData: FormData, userId: string) => Promise<ServerActionResult>;
 }
 
 // フォームデータ型定義
@@ -27,12 +25,16 @@ interface formDataTypes {
   destination?: string; // 利用目的（任意）
 }
 
+interface ReservationResponse {
+  success?: boolean;
+  error?: string;
+}
+
 // 車両予約モーダル
 export function ReservationModal({
   vehicles,
   isOpen,
   onClose,
-  onSubmit,
 }: ReservationModalProps) {
   // 送信中状態管理
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,26 +43,34 @@ export function ReservationModal({
 
   // フォーム送信処理
   const handleSubmit = async (data: formDataTypes) => {
+    console.log("handleSubmit called with:", data); // この行を追加
     setIsSubmitting(true);
     setError(null);
 
     try {
-      // フォームデータをFormData形式に変換
-      const formData = new FormData();
-      formData.append("vehicleId", data.vehicleId);
-      formData.append("startDateTime", data.startDateTime);
-      formData.append("endDateTime", data.endDateTime);
-      formData.append("destination", data.destination || "");
+      const response = await fetch("/api/reservations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          vehicleId: data.vehicleId,
+          startDateTime: data.startDateTime,
+          endDateTime: data.endDateTime,
+          destination: data.destination || "",
+        }),
+      });
 
-      // TODO:認証機能実装後、userIdを適切に取得
-      const result = await onSubmit(formData, "temp-user-id");
+      const result = (await response.json()) as ReservationResponse;
 
-      if (result.success) {
-        // 予約成功時はモーダルを閉じる
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+      console.log("Result:", result);
+
+      if (response.ok && result.success) {
         onClose();
       } else {
-        // エラー時はエラーメッセージを表示
-        setError(result.error || "予約に失敗しました");
+        setError(result.error ?? "予約に失敗しました");
       }
     } catch {
       // 例外発生時のエラーハンドリング
@@ -89,7 +99,12 @@ export function ReservationModal({
         className="fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50"
       >
         {/* 予約フォーム */}
-        <form onSubmit={void form.handleSubmit(handleSubmit)}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void form.handleSubmit(handleSubmit)(e);
+          }}
+        >
           <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl max-w-lg w-full mx-4 border border-white/20">
             {/* ヘッダー */}
             <div className="px-8 py-6 border-b border-gray-100">

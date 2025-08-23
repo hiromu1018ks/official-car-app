@@ -37,14 +37,20 @@ export async function POST(request: Request) {
       );
     }
 
+    // 日時文字列をISO形式に変換（DB保存用）
+    const startDateTime = new Date(
+      validatedData.data.startDateTime
+    ).toISOString();
+    const endDateTime = new Date(validatedData.data.endDateTime).toISOString();
+
     // 予約の重複チェック（同じ車両・期間が重複する予約が存在するか）
     const conflictingReservation = await prisma.reservation.findFirst({
       where: {
         vehicle_id: validatedData.data.vehicleId,
         status: { in: ["SCHEDULED", "IN_PROGRESS"] },
         AND: [
-          { start_time: { lt: validatedData.data.endDateTime } },
-          { end_time: { gt: validatedData.data.startDateTime } },
+          { start_time: { lt: endDateTime } },
+          { end_time: { gt: startDateTime } },
         ],
       },
     });
@@ -62,12 +68,12 @@ export async function POST(request: Request) {
     // 予約レコードを作成
     await prisma.reservation.create({
       data: {
-        vehicle_id: validatedData.data.vehicleId,
-        start_time: validatedData.data.startDateTime,
-        end_time: validatedData.data.endDateTime,
-        destination: validatedData.data.destination,
-        user_id: "user-1", // TODO: 認証実装後は実ユーザーIDをセット
-        status: "SCHEDULED",
+        vehicle_id: validatedData.data.vehicleId, // 車両ID
+        start_time: startDateTime, // 利用開始日時（ISO文字列）
+        end_time: endDateTime, // 利用終了日時（ISO文字列）
+        destination: validatedData.data.destination, // 利用目的
+        user_id: "cmeh4frya0004y9t2yp2nhnnj", // TODO: 認証実装後は実ユーザーIDをセット
+        status: "SCHEDULED", // 予約状態
       },
     });
 

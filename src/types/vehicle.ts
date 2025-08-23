@@ -16,9 +16,13 @@ export interface Vehicle {
   status: "available" | "in-use" | "maintenance"; // 現在の状態
   currentUser?: string; // 現在使用中のユーザー（任意）
   nextInspection: string; // 次回点検日（ISO形式などの文字列）
-  icon: LucideIcon; // 車両を表すアイコンコンポーネント
+  icon: string; // 車両を表すアイコンコンポーネント
   iconColorFrom: string; // アイコンのグラデーション開始色
   iconColorTo: string; // アイコンのグラデーション終了色
+}
+
+export interface VehicleWithIcon extends Omit<Vehicle, "icon"> {
+  icon: LucideIcon; // フロントエンドでのみ使用
 }
 
 /**
@@ -81,7 +85,7 @@ export function dbToFrontendVehicle(dbVehicle: VehicleWithUser): Vehicle {
     status: statusDbToFrontend(dbVehicle.status),
     currentUser: dbVehicle.user?.name || undefined, // 任意なのでundefinedも許容
     nextInspection: dbVehicle.next_inspection.toISOString().split("T")[0], // 日付のみ
-    icon: getIconComponent(dbVehicle.icon), // アイコンはコンポーネントとして扱う
+    icon: dbVehicle.icon, // アイコンはコンポーネントとして扱う
     iconColorFrom: dbVehicle.icon_color_from,
     iconColorTo: dbVehicle.icon_color_to,
   };
@@ -98,7 +102,7 @@ export function frontendToDbVehicle(
     year: vehicle.year,
     status: statusFrontendToDb(vehicle.status),
     next_inspection: new Date(vehicle.nextInspection),
-    icon: getIconName(vehicle.icon),
+    icon: vehicle.icon,
     icon_color_from: vehicle.iconColorFrom,
     icon_color_to: vehicle.iconColorTo,
   };

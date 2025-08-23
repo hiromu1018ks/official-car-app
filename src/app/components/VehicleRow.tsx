@@ -1,5 +1,9 @@
 import { Button } from "@/components/ui/button.tsx";
-import type { StatusConfig, Vehicle } from "@/types/vehicle.ts";
+import {
+  getIconComponent,
+  type StatusConfig,
+  type Vehicle,
+} from "@/types/vehicle.ts";
 
 interface VehicleRowProps {
   vehicle: Vehicle;
@@ -27,7 +31,7 @@ const statusConfig: Record<string, StatusConfig> = {
   },
 };
 export const VehicleRow = ({ vehicle }: VehicleRowProps) => {
-  const IconComponent = vehicle.icon;
+  const IconComponent = getIconComponent(vehicle.icon);
   const status = statusConfig[vehicle.status];
 
   return (
