@@ -11,7 +11,10 @@
       "mcp__lsmcp__get_project_overview",
       "mcp__lsmcp__get_document_symbols",
       "mcp__lsmcp__list_memories",
-      "mcp__lsmcp__read_memory"
+      "mcp__lsmcp__read_memory",
+      "mcp__lsmcp__delete_memory",
+      "mcp__lsmcp__get_definitions",
+      "mcp__lsmcp__check_index_onboarding"
     ],
     "deny": [],
     "ask": []

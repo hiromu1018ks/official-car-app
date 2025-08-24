@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>公用車管理システム - デザインプロトタイプ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+      }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <!-- ヘッダー -->
+    <header class="glass-effect backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg"
+                >
+                  <span class="text-white text-xl">🚗</span>
+                </div>
+                <h1 class="text-xl font-bold text-white">公用車管理システム</h1>
+              </div>
+            </div>
+            <nav class="hidden md:ml-12 md:flex md:space-x-1">
+              <a
+                href="#"
+                class="bg-white/20 text-white px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-sm"
+                >車両一覧</a
+              >
+              <a
+                href="#"
+                class="text-white/80 hover:text-white hover:bg-white/10 px-4 py-2 rounded-xl text-sm font-medium transition-all"
+                >予約管理</a
+              >
+              <a
+                href="#"
+                class="text-white/80 hover:text-white hover:bg-white/10 px-4 py-2 rounded-xl text-sm font-medium transition-all"
+                >利用履歴</a
+              >
+            </nav>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button
+              class="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <span class="flex items-center space-x-2">
+                <span>📅</span>
+                <span>予約する</span>
+              </span>
+            </button>
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-gradient-to-br from-amber-600 to-orange-700 rounded-full flex items-center justify-center shadow-lg"
+              >
+                <span class="text-sm font-bold text-white">田</span>
+              </div>
+              <span class="text-sm font-medium text-white">田中太郎</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- 運転日誌セクション -->
+      <div
+        class="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-3xl shadow-2xl mb-8 overflow-hidden"
+      >
+        <div class="px-8 py-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <div
+                class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg"
+              >
+                <span class="text-white text-2xl">📝</span>
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold text-white mb-1">運転日誌</h2>
+                <p class="text-purple-100">
+                  現在使用中の車両の運転記録を入力できます
+                </p>
+              </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+              <div class="text-center">
+                <div class="text-3xl font-bold text-white">2</div>
+                <div class="text-sm text-purple-100">使用中車両</div>
+              </div>
+              <div class="text-center">
+                <div class="text-3xl font-bold text-white">5</div>
+                <div class="text-sm text-purple-100">今日の記録</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 使用中車両カード -->
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div
+              class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"
+                  >
+                    <span class="text-white">🚐</span>
+                  </div>
+                  <div>
+                    <div class="text-white font-bold">品川 500 か 5678</div>
+                    <div class="text-purple-100 text-sm">日産 セレナ</div>
+                  </div>
+                </div>
+                <span
+                  class="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-medium"
+                  >使用中</span
+                >
+              </div>
+              <div class="space-y-2 mb-4">
+                <div class="flex justify-between text-sm">
+                  <span class="text-purple-100">利用者:</span>
+                  <span class="text-white font-medium">佐藤花子</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-purple-100">開始時刻:</span>
+                  <span class="text-white font-medium">09:30</span>
+                </div>
+              </div>
+              <button
+                onclick="openLogModal()"
+                class="w-full bg-white/20 hover:bg-white/30 text-white font-medium py-3 rounded-xl transition-all backdrop-blur-sm border border-white/20 hover:border-white/40"
+              >
+                運転日誌を入力
+              </button>
+            </div>
+
+            <div
+              class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"
+                  >
+                    <span class="text-white">🚗</span>
+                  </div>
+                  <div>
+                    <div class="text-white font-bold">品川 500 た 9999</div>
+                    <div class="text-purple-100 text-sm">トヨタ アクア</div>
+                  </div>
+                </div>
+                <span
+                  class="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-medium"
+                  >使用中</span
+                >
+              </div>
+              <div class="space-y-2 mb-4">
+                <div class="flex justify-between text-sm">
+                  <span class="text-purple-100">利用者:</span>
+                  <span class="text-white font-medium">田中太郎</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-purple-100">開始時刻:</span>
+                  <span class="text-white font-medium">14:15</span>
+                </div>
+              </div>
+              <button
+                onclick="openLogModal()"
+                class="w-full bg-white/20 hover:bg-white/30 text-white font-medium py-3 rounded-xl transition-all backdrop-blur-sm border border-white/20 hover:border-white/40"
+              >
+                運転日誌を入力
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 統計カード -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div
+          class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20 card-hover"
+        >
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg"
+              >
+                <span class="text-white text-xl">🚗</span>
+              </div>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">総車両数</p>
+              <p class="text-3xl font-bold gradient-text">12台</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20 card-hover"
+        >
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-700 rounded-2xl flex items-center justify-center shadow-lg"
+              >
+                <span class="text-white text-xl">✅</span>
+              </div>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">利用可能</p>
+              <p class="text-3xl font-bold text-blue-600">8台</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20 card-hover"
+        >
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-gradient-to-br from-orange-600 to-red-700 rounded-2xl flex items-center justify-center shadow-lg"
+              >
+                <span class="text-white text-xl">🔧</span>
+              </div>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">点検中</p>
+              <p class="text-3xl font-bold text-orange-600">2台</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20 card-hover"
+        >
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div
+                class="w-12 h-12 bg-gradient-to-br from-pink-600 to-rose-700 rounded-2xl flex items-center justify-center shadow-lg"
+              >
+                <span class="text-white text-xl">🚫</span>
+              </div>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">使用中</p>
+              <p class="text-3xl font-bold text-pink-600">2台</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- フィルターとソート -->
+      <div
+        class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 mb-8"
+      >
+        <div class="p-8">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-6 sm:space-y-0"
+          >
+            <div
+              class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"
+            >
+              <select
+                class="border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+              >
+                <option>すべてのステータス</option>
+                <option>利用可能</option>
+                <option>使用中</option>
+                <option>点検中</option>
+              </select>
+              <select
+                class="border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+              >
+                <option>すべての車種</option>
+                <option>軽自動車</option>
+                <option>普通車</option>
+                <option>バン</option>
+              </select>
+            </div>
+            <div class="flex space-x-3">
+              <div class="relative">
+                <input
+                  type="text"
+                  placeholder="車両番号で検索..."
+                  class="border-0 bg-gray-50 rounded-xl px-4 py-3 pl-12 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm w-64"
+                />
+                <div
+                  class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                >
+                  <span class="text-gray-400">🔍</span>
+                </div>
+              </div>
+              <button
+                class="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white px-6 py-3 rounded-xl text-sm font-medium transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                検索
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 車両一覧テーブル -->
+      <div
+        class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden"
+      >
+        <div class="px-8 py-6 border-b border-gray-100">
+          <h2 class="text-xl font-bold gradient-text">車両一覧</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-100">
+            <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+              <tr>
+                <th
+                  class="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  車両情報
+                </th>
+                <th
+                  class="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  ステータス
+                </th>
+                <th
+                  class="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  現在の利用者
+                </th>
+                <th
+                  class="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  次回点検日
+                </th>
+                <th
+                  class="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  操作
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white/50 divide-y divide-gray-100">
+              <tr class="hover:bg-white/80 transition-all duration-200">
+                <td class="px-8 py-6 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-12 w-12">
+                      <div
+                        class="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center shadow-lg"
+                      >
+                        <span class="text-white font-medium text-lg">🚗</span>
+                      </div>
+                    </div>
+                    <div class="ml-6">
+                      <div class="text-sm font-bold text-gray-900">
+                        品川 500 あ 1234
+                      </div>
+                      <div class="text-sm text-gray-600">
+                        トヨタ プリウス (2022年)
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-8 py-6 whitespace-nowrap">
+                  <span
+                    class="inline-flex px-3 py-1.5 text-xs font-bold rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 shadow-sm"
+                  >
+                    利用可能
+                  </span>
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm text-gray-600 font-medium"
+                >
+                  -
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm text-gray-600 font-medium"
+                >
+                  2024/03/15
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm font-medium space-x-3"
+                >
+                  <button
+                    class="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+                  >
+                    予約
+                  </button>
+                  <button
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg"
+                  >
+                    詳細
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-white/80 transition-all duration-200">
+                <td class="px-8 py-6 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-12 w-12">
+                      <div
+                        class="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-700 flex items-center justify-center shadow-lg"
+                      >
+                        <span class="text-white font-medium text-lg">🚐</span>
+                      </div>
+                    </div>
+                    <div class="ml-6">
+                      <div class="text-sm font-bold text-gray-900">
+                        品川 500 か 5678
+                      </div>
+                      <div class="text-sm text-gray-600">
+                        日産 セレナ (2021年)
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-8 py-6 whitespace-nowrap">
+                  <span
+                    class="inline-flex px-3 py-1.5 text-xs font-bold rounded-full bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 shadow-sm"
+                  >
+                    使用中
+                  </span>
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm text-gray-600 font-medium"
+                >
+                  佐藤花子
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm text-gray-600 font-medium"
+                >
+                  2024/04/20
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm font-medium space-x-3"
+                >
+                  <button
+                    class="bg-gray-200 text-gray-400 cursor-not-allowed px-4 py-2 rounded-xl shadow-md"
+                  >
+                    予約
+                  </button>
+                  <button
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg"
+                  >
+                    詳細
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-white/80 transition-all duration-200">
+                <td class="px-8 py-6 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-12 w-12">
+                      <div
+                        class="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-700 to-indigo-800 flex items-center justify-center shadow-lg"
+                      >
+                        <span class="text-white font-medium text-lg">🚙</span>
+                      </div>
+                    </div>
+                    <div class="ml-6">
+                      <div class="text-sm font-bold text-gray-900">
+                        品川 500 さ 9012
+                      </div>
+                      <div class="text-sm text-gray-600">
+                        ホンダ フリード (2020年)
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-8 py-6 whitespace-nowrap">
+                  <span
+                    class="inline-flex px-3 py-1.5 text-xs font-bold rounded-full bg-gradient-to-r from-orange-100 to-red-100 text-orange-700 shadow-sm"
+                  >
+                    点検中
+                  </span>
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm text-gray-600 font-medium"
+                >
+                  -
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm text-gray-600 font-medium"
+                >
+                  2024/02/28
+                </td>
+                <td
+                  class="px-8 py-6 whitespace-nowrap text-sm font-medium space-x-3"
+                >
+                  <button
+                    class="bg-gray-200 text-gray-400 cursor-not-allowed px-4 py-2 rounded-xl shadow-md"
+                  >
+                    予約
+                  </button>
+                  <button
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg"
+                  >
+                    詳細
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="bg-gradient-to-r from-gray-50 to-white px-8 py-6 border-t border-gray-100"
+        >
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-600 font-medium">
+              <span class="font-bold text-gray-800">12</span> 件中
+              <span class="font-bold text-gray-800">1-3</span> を表示
+            </div>
+            <div class="flex space-x-2">
+              <button
+                class="px-4 py-2 text-sm text-gray-600 bg-white border-0 rounded-xl hover:bg-gray-100 transition-all shadow-md"
+              >
+                前へ
+              </button>
+              <button
+                class="px-4 py-2 text-sm text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl shadow-lg"
+              >
+                1
+              </button>
+              <button
+                class="px-4 py-2 text-sm text-gray-700 bg-white rounded-xl hover:bg-gray-100 transition-all shadow-md"
+              >
+                2
+              </button>
+              <button
+                class="px-4 py-2 text-sm text-gray-700 bg-white rounded-xl hover:bg-gray-100 transition-all shadow-md"
+              >
+                3
+              </button>
+              <button
+                class="px-4 py-2 text-sm text-gray-600 bg-white border-0 rounded-xl hover:bg-gray-100 transition-all shadow-md"
+              >
+                次へ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 予約モーダル（非表示状態） -->
+    <div
+      id="modal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50"
+    >
+      <div
+        class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl max-w-lg w-full mx-4 border border-white/20"
+      >
+        <div class="px-8 py-6 border-b border-gray-100">
+          <h3 class="text-xl font-bold gradient-text">車両を予約する</h3>
+        </div>
+        <div class="px-8 py-6 space-y-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >車両を選択</label
+            >
+            <select
+              class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+            >
+              <option>品川 500 あ 1234 - トヨタ プリウス</option>
+              <option>品川 500 た 2345 - ホンダ フィット</option>
+              <option>品川 500 な 3456 - 日産 ノート</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >利用開始日時</label
+            >
+            <input
+              type="datetime-local"
+              class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >利用終了日時</label
+            >
+            <input
+              type="datetime-local"
+              class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >利用目的</label
+            >
+            <textarea
+              placeholder="出張、会議、その他の業務など..."
+              class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm h-24 resize-none"
+            ></textarea>
+          </div>
+        </div>
+        <div
+          class="px-8 py-6 border-t border-gray-100 flex justify-end space-x-4"
+        >
+          <button
+            onclick="closeModal()"
+            class="px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all shadow-md"
+          >
+            キャンセル
+          </button>
+          <button
+            onclick="closeModal()"
+            class="px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl hover:from-purple-700 hover:to-indigo-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            予約を確定する
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 運転日誌モーダル（非表示状態） -->
+    <div
+      id="logModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50"
+    >
+      <div
+        class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl max-w-2xl w-full mx-4 border border-white/20"
+      >
+        <div class="px-8 py-6 border-b border-gray-100">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center"
+            >
+              <span class="text-white text-sm">📝</span>
+            </div>
+            <h3 class="text-xl font-bold gradient-text">運転日誌を入力</h3>
+          </div>
+          <p class="text-sm text-gray-600 mt-2">
+            車両：品川 500 か 5678 - 日産 セレナ
+          </p>
+        </div>
+        <div class="px-8 py-6 space-y-6">
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2"
+                >出発時刻</label
+              >
+              <input
+                type="time"
+                class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2"
+                >到着時刻</label
+              >
+              <input
+                type="time"
+                class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2"
+                >出発時メーター (km)</label
+              >
+              <input
+                type="number"
+                placeholder="12345"
+                class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2"
+                >到着時メーター (km)</label
+              >
+              <input
+                type="number"
+                placeholder="12380"
+                class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+              />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >行き先・経路</label
+            >
+            <input
+              type="text"
+              placeholder="東京駅 → 品川駅 → 羽田空港"
+              class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >給油の有無</label
+            >
+            <div class="flex space-x-4">
+              <label class="flex items-center">
+                <input
+                  type="radio"
+                  name="fuel"
+                  value="yes"
+                  class="text-purple-600 focus:ring-purple-500"
+                />
+                <span class="ml-2 text-sm text-gray-700">給油あり</span>
+              </label>
+              <label class="flex items-center">
+                <input
+                  type="radio"
+                  name="fuel"
+                  value="no"
+                  class="text-purple-600 focus:ring-purple-500"
+                  checked
+                />
+                <span class="ml-2 text-sm text-gray-700">給油なし</span>
+              </label>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >備考・特記事項</label
+            >
+            <textarea
+              placeholder="車両の状態、事故・トラブルの有無など..."
+              class="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm h-24 resize-none"
+            ></textarea>
+          </div>
+        </div>
+        <div
+          class="px-8 py-6 border-t border-gray-100 flex justify-end space-x-4"
+        >
+          <button
+            onclick="closeLogModal()"
+            class="px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all shadow-md"
+          >
+            キャンセル
+          </button>
+          <button
+            onclick="closeLogModal()"
+            class="px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl hover:from-purple-700 hover:to-indigo-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            日誌を保存
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // モーダル表示・非表示の制御
+      function openModal() {
+        document.getElementById("modal").classList.remove("hidden");
+        document.getElementById("modal").classList.add("flex");
+      }
+
+      function closeModal() {
+        document.getElementById("modal").classList.add("hidden");
+        document.getElementById("modal").classList.remove("flex");
+      }
+
+      // 運転日誌モーダル表示・非表示の制御
+      function openLogModal() {
+        document.getElementById("logModal").classList.remove("hidden");
+        document.getElementById("logModal").classList.add("flex");
+      }
+
+      function closeLogModal() {
+        document.getElementById("logModal").classList.add("hidden");
+        document.getElementById("logModal").classList.remove("flex");
+      }
+
+      // 予約ボタンのクリックイベント
+      document.addEventListener("DOMContentLoaded", function () {
+        const reserveButton = Array.from(
+          document.querySelectorAll("button")
+        ).find((btn) => btn.textContent.includes("予約する"));
+        if (reserveButton) {
+          reserveButton.addEventListener("click", openModal);
+        }
+      });
+
+      // モーダル外クリックで閉じる
+      document.getElementById("modal").addEventListener("click", function (e) {
+        if (e.target === this) {
+          closeModal();
+        }
+      });
+
+      // 運転日誌モーダル外クリックで閉じる
+      document
+        .getElementById("logModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeLogModal();
+          }
+        });
+
+      // 検索機能のデモ
+      document
+        .querySelector('input[placeholder="車両番号で検索..."]')
+        .addEventListener("input", function (e) {
+          const searchTerm = e.target.value.toLowerCase();
+          const rows = document.querySelectorAll("tbody tr");
+
+          rows.forEach((row) => {
+            const vehicleNumber = row
+              .querySelector(".text-sm.font-medium")
+              .textContent.toLowerCase();
+            if (vehicleNumber.includes(searchTerm)) {
+              row.style.display = "";
+            } else {
+              row.style.display = "none";
+            }
+          });
+        });
+
+      // ステータスフィルターのデモ
+      document.querySelector("select").addEventListener("change", function (e) {
+        const filterValue = e.target.value;
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach((row) => {
+          if (filterValue === "すべてのステータス") {
+            row.style.display = "";
+          } else {
+            const status = row.querySelector(".inline-flex").textContent.trim();
+            if (status === filterValue) {
+              row.style.display = "";
+            } else {
+              row.style.display = "none";
+            }
+          }
+        });
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'9705d4e816fa29e1',t:'MTc1NTM5ODY4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
