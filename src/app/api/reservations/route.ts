@@ -131,6 +131,7 @@ export async function GET() {
         // 車両情報を含める（表示に必要な項目のみ選択）
         vehicle: {
           select: {
+            id: true, // 車両ID
             make: true, // メーカー
             model: true, // モデル
             license_plate: true, // ナンバープレート

@@ -56,7 +56,7 @@ export default function Home() {
         maintenance={maintenance}
         vehicles={vehicles}
       />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 space-y-">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 space-y-4">
         <VehicleTable />
         <ReservationCalendar />
       </main>

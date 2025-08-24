@@ -14,7 +14,8 @@
       "mcp__lsmcp__read_memory",
       "mcp__lsmcp__delete_memory",
       "mcp__lsmcp__get_definitions",
-      "mcp__lsmcp__check_index_onboarding"
+      "mcp__lsmcp__check_index_onboarding",
+      "mcp__lsmcp__get_diagnostics"
     ],
     "deny": [],
     "ask": []

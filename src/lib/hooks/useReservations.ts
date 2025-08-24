@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
  * 予約データと関連する車両・ユーザー情報を含むオブジェクトの型定義
  * APIから取得される予約データの完全な構造を表現
  */
-interface ReservationWithDetails {
+export interface ReservationWithDetails {
   id: string; // 予約ID
+  vehicle_id: string; // 車両ID
   start_time: string; // 利用開始日時（ISO文字列形式）
   end_time: string; // 利用終了日時（ISO文字列形式）
   destination: string | null; // 利用目的・行き先（任意）

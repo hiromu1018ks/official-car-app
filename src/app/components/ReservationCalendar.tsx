@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
+import type { VehicleStatus } from "@/generated/prisma";
 import { useReservations } from "@/lib/hooks/useReservations.ts";
+import type { Vehicle } from "@/types/vehicle.ts";
+import { ReservationModal } from "./ReservationModal.tsx";
 
 /**
  * 予約データと関連する車両・ユーザー情報を含むオブジェクトの型定義
@@ -10,6 +13,7 @@ import { useReservations } from "@/lib/hooks/useReservations.ts";
  */
 interface ReservationWithDetails {
   id: string; // 予約ID
+  vehicle_id: string; // 車両ID
   start_time: string; // 利用開始日時（ISO文字列形式）
   end_time: string; // 利用終了日時（ISO文字列形式）
   destination: string | null; // 利用目的・行き先（任意）
@@ -26,6 +30,21 @@ interface ReservationWithDetails {
     name: string; // ユーザー名
     email: string; // メールアドレス
   };
+}
+
+interface VehicleApiResponse {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  license_plate: string;
+  status: VehicleStatus;
+  icon: string;
+  icon_color_from: string;
+  icon_color_to: string;
+  next_inspection: string;
+  created_at: string;
+  updated_at: string;
 }
 
 /**
@@ -95,10 +114,64 @@ const getReservationsForDay = (
  */
 export function ReservationCalendar() {
   // 予約データの取得（ローディング・エラー状態含む）
-  const { reservations, loading, error } = useReservations();
+  const { reservations, loading, error, refetch } = useReservations();
 
   // 現在表示中の週の基準日（デフォルトは今日）
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    mode: "create" | "edit" | "view";
+    reservation: ReservationWithDetails | null;
+  }>({
+    isOpen: false,
+    mode: "create",
+    reservation: null,
+  });
+
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const response = await fetch("/api/vehicles");
+        const apiVehicles = (await response.json()) as VehicleApiResponse[];
+
+        const convertedVehicles: Vehicle[] = apiVehicles.map((v) => ({
+          id: v.id,
+          make: v.make,
+          model: v.model,
+          year: v.year,
+          licensePlate: v.license_plate, // 変換
+          status:
+            v.status === "AVAILABLE"
+              ? "available"
+              : v.status === "IN_USE"
+                ? "in-use"
+                : "maintenance",
+          icon: v.icon,
+          iconColorFrom: v.icon_color_from, // 変換
+          iconColorTo: v.icon_color_to, // 変換
+          nextInspection: (() => {
+            try {
+              const date = new Date(v.next_inspection);
+
+              return isNaN(date.getTime())
+                ? "2024-01-01"
+                : date.toISOString().split("T")[0];
+            } catch {
+              return "2024-01-01";
+            }
+          })(),
+        }));
+        setVehicles(convertedVehicles);
+      } catch (error) {
+        console.error("車両データの取得に失敗:", error);
+      }
+    };
+
+    void fetchVehicles();
+  }, []);
 
   // ローディング中の表示
   if (loading) return <div className="p-4">Loading...</div>;
@@ -136,7 +209,11 @@ export function ReservationCalendar() {
    * @param reservation - クリックされた予約データ
    */
   const handleReservationClick = (reservation: ReservationWithDetails) => {
-    console.log("予約詳細:", reservation);
+    setModalState({
+      isOpen: true,
+      mode: "edit",
+      reservation,
+    });
   };
 
   /**
@@ -235,6 +312,29 @@ export function ReservationCalendar() {
           );
         })}
       </div>
+
+      <ReservationModal
+        {...(modalState.mode === "create"
+          ? { mode: "create", vehicles }
+          : modalState.mode === "edit"
+            ? {
+                mode: "edit",
+                reservation: modalState.reservation!,
+                vehicles,
+                onUpdate: () => {
+                  // 予約データを再取得
+                  void refetch();
+                },
+              }
+            : {
+                mode: "view",
+                reservation: modalState.reservation!,
+              })}
+        isOpen={modalState.isOpen}
+        onClose={() =>
+          setModalState({ isOpen: false, mode: "create", reservation: null })
+        }
+      />
     </div>
   );
 }

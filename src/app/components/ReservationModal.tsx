@@ -1,21 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
+import type { ReservationWithDetails } from "@/lib/hooks/useReservations.ts";
 import { reservationSchema } from "@/lib/schemas/reservation.ts";
 import type { Vehicle } from "@/types/vehicle.ts";
 
 // ReservationModalコンポーネントのprops型定義
-interface ReservationModalProps {
-  vehicles: Vehicle[]; // 選択可能な車両リスト
-  isOpen: boolean; // モーダル表示状態
-  onClose: () => void; // モーダルを閉じる関数
-}
+type ReservationModalProps =
+  | {
+      mode: "create";
+      vehicles: Vehicle[];
+      isOpen: boolean;
+      onClose: () => void;
+    }
+  | {
+      mode: "edit";
+      reservation: ReservationWithDetails;
+      vehicles: Vehicle[];
+      isOpen: boolean;
+      onClose: () => void;
+      onUpdate?: () => void;
+    }
+  | {
+      mode: "view";
+      reservation: ReservationWithDetails;
+      isOpen: boolean;
+      onClose: () => void;
+    };
 
 // フォームデータ型定義
 interface formDataTypes {
@@ -31,25 +48,38 @@ interface ReservationResponse {
 }
 
 // 車両予約モーダル
-export function ReservationModal({
-  vehicles,
-  isOpen,
-  onClose,
-}: ReservationModalProps) {
+export function ReservationModal(props: ReservationModalProps) {
+  const { isOpen, onClose } = props;
+
+  const isCreateMode = props.mode === "create";
+  const isEditMode = props.mode === "edit";
+  const isViewMode = props.mode === "view";
+
+  const reservation = isCreateMode ? null : props.reservation;
+
+  const vehicles = isViewMode ? [] : props.vehicles;
+
   // 送信中状態管理
   const [isSubmitting, setIsSubmitting] = useState(false);
   // エラーメッセージ管理
   const [error, setError] = useState<null | string>(null);
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   // フォーム送信処理
   const handleSubmit = async (data: formDataTypes) => {
+    const apiUrl = isEditMode
+      ? `/api/reservations/${reservation?.id}`
+      : "/api/reservations";
+    const apiMethod = isEditMode ? "PUT" : "POST";
     console.log("handleSubmit called with:", data); // この行を追加
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/reservations", {
-        method: "POST",
+      const response = await fetch(apiUrl, {
+        method: apiMethod,
         headers: {
           "Content-Type": "application/json",
         },
@@ -80,16 +110,79 @@ export function ReservationModal({
     }
   };
 
-  // React Hook Formの初期化
-  const form = useForm<formDataTypes>({
-    resolver: zodResolver(reservationSchema), // Zodスキーマでバリデーション
-    defaultValues: {
+  const handleDelete = async () => {
+    if (!reservation) return;
+
+    setIsDeleting(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/reservations/${reservation.id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setShowDeleteConfirm(false);
+        onClose();
+
+        if (isEditMode && "onUpdate" in props && props.onUpdate) {
+          props.onUpdate();
+        }
+      } else {
+        const result = (await response.json()) as ReservationResponse;
+        setError(result.error || "削除に失敗しました");
+      }
+    } catch {
+      setError("削除処理中にエラーが発生しました");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const getDefaultValues = (): formDataTypes => {
+    if (reservation && (isEditMode || isViewMode)) {
+      return {
+        vehicleId: "", // 編集時は車両IDが必要（後で修正）
+        startDateTime: new Date(reservation.start_time)
+          .toISOString()
+          .slice(0, 16),
+        endDateTime: new Date(reservation.end_time).toISOString().slice(0, 16),
+        destination: reservation.destination || "",
+      };
+    }
+
+    return {
       vehicleId: "",
       startDateTime: "",
       endDateTime: "",
       destination: "",
-    },
+    };
+  };
+
+  // React Hook Formの初期化
+  const form = useForm<formDataTypes>({
+    resolver: zodResolver(reservationSchema), // Zodスキーマでバリデーション
+    defaultValues: getDefaultValues(),
   });
+
+  useEffect(() => {
+    if (reservation && (isEditMode || isViewMode)) {
+      form.reset({
+        vehicleId: reservation.vehicle_id, // 車両IDを設定
+        startDateTime: new Date(reservation.start_time)
+          .toISOString()
+          .slice(0, 16),
+        endDateTime: new Date(reservation.end_time).toISOString().slice(0, 16),
+        destination: reservation.destination || "",
+      });
+    } else if (isCreateMode) {
+      form.reset({
+        vehicleId: "",
+        startDateTime: "",
+        endDateTime: "",
+        destination: "",
+      });
+    }
+  }, [reservation, isCreateMode, isEditMode, isViewMode, form]);
 
   // モーダル本体
   return (
@@ -109,7 +202,11 @@ export function ReservationModal({
             {/* ヘッダー */}
             <div className="px-8 py-6 border-b border-gray-100">
               <h3 className="text-xl font-bold gradient-text">
-                車両を予約する
+                {isCreateMode
+                  ? "車両を予約する"
+                  : isEditMode
+                    ? "予約を編集する"
+                    : "予約詳細"}
               </h3>
             </div>
             {/* 入力フィールド */}
@@ -121,6 +218,7 @@ export function ReservationModal({
                 </Label>
                 <select
                   {...form.register("vehicleId")}
+                  disabled={isViewMode}
                   className="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
                 >
                   <option value="">選択してください</option>
@@ -145,6 +243,7 @@ export function ReservationModal({
                 <Input
                   {...form.register("startDateTime")}
                   type="datetime-local"
+                  disabled={isViewMode}
                   className="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
                 />
                 {form.formState.errors.startDateTime && (
@@ -161,6 +260,7 @@ export function ReservationModal({
                 <Input
                   {...form.register("endDateTime")}
                   type="datetime-local"
+                  disabled={isViewMode}
                   className="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm"
                 />
                 {form.formState.errors.endDateTime && (
@@ -176,6 +276,7 @@ export function ReservationModal({
                 </Label>
                 <Textarea
                   {...form.register("destination")}
+                  disabled={isViewMode}
                   placeholder="出張、会議、その他の業務など..."
                   className="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all shadow-sm h-24 resize-none"
                 ></Textarea>
@@ -200,16 +301,56 @@ export function ReservationModal({
               >
                 キャンセル
               </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl hover:from-purple-700 hover:to-indigo-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-              >
-                予約を確定する
-              </Button>
+
+              {isViewMode && (
+                <Button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="px-6 py-3 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all"
+                >
+                  削除
+                </Button>
+              )}
+
+              {!isViewMode && (
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl hover:from-purple-700 hover:to-indigo-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  {isEditMode ? "予約を更新する" : "予約を確定する"}
+                </Button>
+              )}
             </div>
           </div>
         </form>
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-60">
+            <div className="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                予約を削除しますか？
+              </h3>
+              <p className="text-sm text-gray-600 mb-6">
+                この操作は取り消せません。予約を完全に削除します。
+              </p>
+              <div className="flex justify-end space-x-4">
+                <Button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={isDeleting}
+                  className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                >
+                  キャンセル
+                </Button>
+                <Button
+                  onClick={void handleDelete}
+                  disabled={isDeleting}
+                  className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                  {isDeleting ? "削除中..." : "削除する"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   );
